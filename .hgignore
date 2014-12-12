@@ -2,6 +2,11 @@
 syntax: regexp
 ^\.project$
 syntax: regexp
-^\.RData$
+^vignettes/cache$
 syntax: regexp
-^inst/doc/.*\.md$
+^vignettes/figure$
+^vignettes/.+\.html$
+^vignettes/.+\.md$
+
+syntax: regexp
+^\.RData$

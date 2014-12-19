@@ -33,6 +33,12 @@ Use `knitr::knit2html(fName)` to convert it to html.
 
 Function `genVigs()` in package twDev
 
+For [automated creation](http://yihui.name/knitr/demo/vignette/) on R CMD build, specify in DESCRIPTION  
+* Suggests:  knitr
+* VignetteBuilder: knitr
+
+
+
 Text decoration
 * *italics*, _italics_
 * **bold**, __bold__

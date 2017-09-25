@@ -1,7 +1,12 @@
-<!--
-%\VignetteEngine{knitr}
-%\VignetteIndexEntry{Example using equations and figures}
--->
+---
+author: "Thomas Wutzler"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{Example using equations and figures}
+  %\usepackage[UTF-8]{inputenc}
+---
 
 An Example vignette with demonstrations
 =======================================

@@ -1,11 +1,13 @@
 Package: myPackageId
-Title: one line title  
+Title: One Line Title in Title Case  
 Version: 0.0.0.9000
-Date: 2012-06-22
+Date: 2017-09-25
 Author: Thomas Wutzler
 Maintainer: Thomas Wutzler <twutz@bgc-jena.mpg.de>
-Description: longer description
+Description: Here are some sentences of longer description.
 Depends: R (>= 3.2.0)
-Suggests: testthat
+Suggests: testthat, knitr
 License: GPL-3
 LazyLoad: yes
+LazyData: true
+VignetteBuilder: knitr

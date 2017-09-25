@@ -2,7 +2,9 @@
 if(require("testthat", quietly=TRUE)) {
 	#pkg <- "PKG" # <-- Change to package name!
 	pkg <- "myPackageId" # <-- Change to package name!
-	test_package(pkg)
+	#library(pkg, character.only = TRUE)
+	#test_package(pkg)
+	test_check(pkg)
 } else {
 	warning("cannot run unit tests -- package testthat is not available")
 }

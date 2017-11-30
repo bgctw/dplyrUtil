@@ -1,21 +1,11 @@
 # this is a template to start up an package
 # replace all occurrences of myPackageId with the package-Identifier
 # * DESCRIPTION
-# * tests/doRUnit.R
-# * inst/genData/myPackageId-package.Rd
+# * tests/testthat.R
+# * inst/genData/myPackageId-package.Rd     (also in the filename)
 # The name of directory must also be the package-Identifier
 
-# For creating the package, you may consider using the twDev package.
-# It is available from 
-# https://www.bgc-jena.mpg.de/bgi/index.php/Intra/ComputingCodeListPackages
-# The directory must be names according to the package id
-# The workspace should be the directory of the DESCRIPTION file.
+# The R-workspace should be the directory of the DESCRIPTION file.
 
-library(twDev)
-?twDev
-loadPkg()
-
-genRd()
-runRCheck()
-hgCommit("descriptive comment of your changes")
-hgPush()
+# For developing your R package, you may consider using the devtools
+https://github.com/hadley/devtools

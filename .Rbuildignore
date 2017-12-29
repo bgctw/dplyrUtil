@@ -1,16 +1,16 @@
-^.*\.Rproj$         
-^\.Rproj\.user$      
+^.*.Rproj$
+^\.Rproj\.user$
 ^README\.Rmd$
 ^README\.md$
 ^README-.*\.png$
-^NEWS\.md$          
-^NEWS\.Rmd$          
+^NEWS\.md$
+^NEWS\.Rmd$
 ^vignettes/figure/.*$
-^vignettes/cache/.*$	
+^vignettes/cache/.*$
 ^scratch$
 ^tmp$
 ^.git$
 ^.gitignore$
-^.project$	    # added by eclipse 
+^.project$	    # added by eclipse
 ^cranComments.md$
 ^readme.txt$

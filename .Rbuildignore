@@ -14,3 +14,4 @@
 ^.project$	    # added by eclipse
 ^cranComments.md$
 ^readme.txt$
+^.*\.Rproj$

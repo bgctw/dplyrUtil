@@ -19,4 +19,7 @@ is recycled.}
 \examples{
 # This example appears in the generated help.
 fSampleFunc(1:10, 2)
+  donttest({
+    if (!interactive()) stop("should only be executed interactively.")
+  })
 }

@@ -2,8 +2,8 @@
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^README\.md$
+^README\.html$
 ^README-.*\.png$
-^NEWS\.md$
 ^NEWS\.Rmd$
 ^vignettes/figure/.*$
 ^vignettes/cache/.*$
@@ -15,6 +15,7 @@ vignettes/.*\.md
 ^.git$
 ^.gitignore$
 ^.project$	    # added by eclipse
-^cranComments.md$
+^cran-comments.md$
 ^readme.txt$
 ^.*\.Rproj$
+^\.travis\.yml$

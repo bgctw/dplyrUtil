@@ -11,7 +11,7 @@ Some longer description.
 
 \details{
 
-Common tasks when using dplyr are 
+Common tasks when dealing with dplyr are 
 \itemize{
 \item{ split-map-combine: \code{\link{mapGroups}}  }
 \item{ mutate acting only on the rows satisfying the condition: 

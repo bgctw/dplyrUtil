@@ -4,7 +4,7 @@ NULL
 #' @importFrom dplyr left_join select one_of %>%
 #' @export
 left_joinReplace <- function(
-  ### \code{\link{left_join}} but before drop columns that would be duplicated
+  ### \code{\link{left_join}} with before dropping columns that would be duplicated
   x,y   ##<< data.frames to join
   , by  ##<< here must be a character vector
   , ... ##<< further arguments to \code{\link{left_join}}
@@ -32,13 +32,34 @@ mapGroups <- function(
   , drop = TRUE  ##<< logical indicating if levels that do not occur should 
   ## be dropped. Set to FALSE if FUN returns a data.frame also 
   ## for zero-row inputs.
+  , .isFactorReleveled = FALSE
 ){
   # https://coolbutuseless.bitbucket.io/2018/03/03/split-apply-combine-my-search-for-a-replacement-for-group_by---do/
   groupVars <- group_vars(data)
   if (!length(groupVars)) return(FUN(data,...))
   data %>% 
     split(select(.,groupVars), drop = drop) %>% 
-    map_dfr(FUN,...)
+    map_dfrFactor(FUN,...,.isFactorReleveled = .isFactorReleveled)
+}
+
+#' @importFrom purrr as_mapper map
+#' @importFrom dplyr bind_rows
+#' @export
+map_dfrFactor <- function(
+  ### variant of map_dfr that releveles unequal factor levels before binding
+  .x                ##<< list to map over
+  , .f              ##<< function to apply
+  , ...             ##<< further arguments to \code{\link{purrr::map}}
+  , .id = NULL      ##<< argument to \code{\link{bind_rows}}
+  , .isFactorReleveled = TRUE ##<< set to FALSE to avoid releveling
+  , .noWarningCols = character(0)  ##<< argument 
+  ## to \code{\link{expandAllInconsistentFactorLevels}}
+  
+) {
+  .f <- as_mapper(.f, ...)
+  res <- map(.x, .f, ...) %>% 
+    expandAllInconsistentFactorLevels(.noWarningCols = .noWarningCols) 
+  bind_rows(res, .id = .id)
 }
 
 
@@ -112,6 +133,7 @@ attr(expandAllInconsistentFactorLevels,"ex") <- function(){
   }
 }
 
+#' @export
 expandFactorLevels <- function(
   ### expand a factor in all dataset to encompass levels of all sets
   datasets    ##<< list of data.frames
@@ -128,14 +150,18 @@ expandFactorLevels <- function(
   ans
 }
 
+#' @export
 left_joinFactors <- function(
   ### left join with homogenizing factors before
   x     ##<< left tbl to join
   , y   ##<< right tbl to join
   , ... ##<< further arguments to \code{\link{left_join}} or \code{fJoin}
   , fJoin = left_join  ##<< join function(x,y,...) to use
+  , .noWarningCols = character(0)  ##<< string vector: do not warn for the these
+  ## columns
 ){
-  dfs <- expandAllInconsistentFactorLevels(x,y)
+  dfs <- expandAllInconsistentFactorLevels(
+    x,y, .noWarningCols = .noWarningCols)
   ##value<< results of \code{\link{left_join}} or given alternative join function
   fJoin(dfs[[1]], dfs[[2]], ...)
 }

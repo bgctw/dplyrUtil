@@ -58,10 +58,9 @@ ds
 
 ``` r
 fSub <- function(dss){ mutate(dss, countInKind = paste(kind,1:n()) )}
-ans <- ds %>% 
+ds %>% 
   group_by(kind) %>% 
   mapGroups(fSub)
-ans
 #> # A tibble: 5 x 3
 #> # Groups:   kind [2]
 #>   food        kind   countInKind
@@ -77,12 +76,11 @@ Compare this to the usual nest-map-unnest idiom:
 
 ``` r
 fSub2 <- function(dss, kind){ mutate(dss, countInKind = paste(kind,1:n()) )}
-ans <- ds %>% 
+ds %>% 
   group_by(kind) %>% 
   nest() %>% 
   mutate(data = purrr::map2(data, kind, fSub2)) %>% 
   unnest()
-ans
 #> # A tibble: 5 x 3
 #>   kind   food        countInKind
 #>   <fct>  <chr>       <chr>      

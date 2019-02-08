@@ -22,7 +22,7 @@ left_joinReplace <- function(
 }
 
 #' @export
-#' @importFrom dplyr %>% group_vars select 
+#' @importFrom dplyr %>% group_vars select group_indices
 #' @importFrom purrr map_dfr
 mapGroups <- function(
   ### split-map-combine
@@ -38,7 +38,8 @@ mapGroups <- function(
   groupVars <- group_vars(data)
   if (!length(groupVars)) return(FUN(data,...))
   data %>% 
-    split(select(.,groupVars), drop = drop) %>% 
+    split(group_indices(.)) %>% 
+    #split(select(.,groupVars), drop = drop) %>% 
     map_dfrFactor(FUN,...,.isFactorReleveled = .isFactorReleveled)
 }
 

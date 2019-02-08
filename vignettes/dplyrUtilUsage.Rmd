@@ -52,15 +52,18 @@ require(dplyrUtil, quietly = TRUE)
 
 split-map-combine
 -----------------
-One common operation is the [split-map-combine](TODO) pattern 
+One common operation is the 
+[split-map-combine](https://coolbutuseless.bitbucket.io/2018/03/03/split-apply-combine-my-search-for-a-replacement-for-group_by---do/) 
+pattern. 
 A tbl, i.e. tabular data such as a data.frame or a tibble,  is
 subset, then for each subset a function is called that returns a tbl, and
 finally the resulting tbls are row-bind again.
 
-While the tidyverse favours the [group_by-nest-map-unnest](TODO) idiom
-of this pattern,
+While the tidyverse favours the 
+[group_by-nest-map-unnest](https://coolbutuseless.bitbucket.io/2018/03/03/split-apply-combine-my-search-for-a-replacement-for-group_by---do/#split-apply-combine---current-era-tidyverse-group_by-nest-mutatemap) 
+idiom of this pattern,
 the resulting code is hard to understand for people not familiar
-with this idiom. Moreover, the nested data.frames does not 
+with this idiom. Moreover, the nested data.frames do not 
 contain the grouping columns which are sometimes required by
 the function working on the subset.
 

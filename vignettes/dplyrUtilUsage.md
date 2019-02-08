@@ -1,7 +1,7 @@
 <!-- 
 README.md is generated from README.Rmd. Please edit that file
 rmarkdown::render(
-  "dplyrUtilUsage.Rmd", output_format = rmarkdown::md_document()) 
+  "vignettes/dplyrUtilUsage.Rmd", output_format = rmarkdown::md_document()) 
 -->
 Common tasks when using dplyr
 =============================
@@ -22,15 +22,17 @@ issues. This package provides routines for some of those issues.
 split-map-combine
 -----------------
 
-One common operation is the [split-map-combine](TODO) pattern A tbl,
-i.e. tabular data such as a data.frame or a tibble, is subset, then for
-each subset a function is called that returns a tbl, and finally the
-resulting tbls are row-bind again.
+One common operation is the
+[split-map-combine](https://coolbutuseless.bitbucket.io/2018/03/03/split-apply-combine-my-search-for-a-replacement-for-group_by---do/)
+pattern. A tbl, i.e. tabular data such as a data.frame or a tibble, is
+subset, then for each subset a function is called that returns a tbl,
+and finally the resulting tbls are row-bind again.
 
-While the tidyverse favours the [group\_by-nest-map-unnest](TODO) idiom
-of this pattern, the resulting code is hard to understand for people not
-familiar with this idiom. Moreover, the nested data.frames does not
-contain the grouping columns which are sometimes required by the
+While the tidyverse favours the
+[group\_by-nest-map-unnest](https://coolbutuseless.bitbucket.io/2018/03/03/split-apply-combine-my-search-for-a-replacement-for-group_by---do/#split-apply-combine---current-era-tidyverse-group_by-nest-mutatemap)
+idiom of this pattern, the resulting code is hard to understand for
+people not familiar with this idiom. Moreover, the nested data.frames do
+not contain the grouping columns which are sometimes required by the
 function working on the subset.
 
 `dplyUtil` provides function `mapGroups` that provides a dplyr like call

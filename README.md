@@ -73,7 +73,7 @@ ans
 #> 5 pear        fruit  fruit 3
 ```
 
-Compare this to the nest-map-unnest idiom:
+Compare this to the usual nest-map-unnest idiom:
 
 ``` r
 fSub2 <- function(dss, kind){ mutate(dss, countInKind = paste(kind,1:n()) )}

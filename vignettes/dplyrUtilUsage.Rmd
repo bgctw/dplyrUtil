@@ -8,6 +8,12 @@ vignette: >
   %\usepackage[UTF-8]{inputenc}
 ---
 
+<!-- 
+README.md is generated from README.Rmd. Please edit that file
+rmarkdown::render(
+  "vignettes/dplyrUtilUsage.Rmd", output_format = rmarkdown::md_document()) 
+-->
+
 Common tasks when using dplyr
 =============================
 

@@ -49,7 +49,7 @@ map_dfrFactor <- function(
   ### variant of map_dfr that releveles unequal factor levels before binding
   .x                ##<< list to map over
   , .f              ##<< function to apply
-  , ...             ##<< further arguments to \code{\link{purrr::map}}
+  , ...             ##<< further arguments to \code{purrr::map}
   , .id = NULL      ##<< argument to \code{\link{bind_rows}}
   , .isFactorReleveled = TRUE ##<< set to FALSE to avoid releveling
   , .noWarningCols = character(0)  ##<< argument 

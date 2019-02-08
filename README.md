@@ -91,4 +91,4 @@ ds %>%
 #> 5 cereal corn flakes cereal 2
 ```
 
-See the [usecase vignette](https://github.com/bgctw/dplyrUtil/tree/master/vignette/dplyrUtilUsage.md) and other [package vignettes](https://github.com/bgctw/dplyrUtil/tree/master/vignettes) (\*.md) for examples.
+See the [usecase vignette](https://github.com/bgctw/dplyrUtil/blob/master/vignettes/dplyrUtilUsage.md) and other [package vignettes](https://github.com/bgctw/dplyrUtil/tree/master/vignettes) (\*.md) for examples.

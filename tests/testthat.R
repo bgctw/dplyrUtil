@@ -1,4 +1,4 @@
 library(testthat)
-library(myPackageId)
+library(dplyrUtil)
 
-test_check("myPackageId")
+test_check("dplyrUtil")

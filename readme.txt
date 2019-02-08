@@ -3,6 +3,8 @@
 # * DESCRIPTION
 # * tests/testthat.R
 # * inst/genData/myPackageId-package.Rd     (also in the filename)
+# * README.Rmd 
+# * NEWS.md
 # The name of directory must also be the package-Identifier
 
 # The R-workspace should be the directory of the DESCRIPTION file.

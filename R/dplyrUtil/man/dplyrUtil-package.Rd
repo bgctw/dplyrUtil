@@ -1,0 +1,35 @@
+\name{dplyrUtil-package}
+\alias{dplyrUtil-package}
+\alias{dplyrUtil}
+\docType{package}
+\title{
+\packageTitle{dplyrUtil}
+}
+\description{
+\packageDescription{dplyrUtil}
+}
+\details{
+
+The DESCRIPTION file:
+\packageDESCRIPTION{dplyrUtil}
+\packageIndices{dplyrUtil}
+~~ An overview of how to use the package, including the most important functions ~~
+}
+\author{
+\packageAuthor{dplyrUtil}
+
+Maintainer: \packageMaintainer{dplyrUtil}
+}
+\references{
+~~ Literature or other references for background information ~~
+}
+~~ Optionally other standard keywords, one per line, from file KEYWORDS in the R ~~
+~~ documentation directory ~~
+\keyword{ package }
+\seealso{
+~~ Optional links to other man pages, e.g. ~~
+~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
+}
+\examples{
+~~ simple examples of the most important functions ~~
+}

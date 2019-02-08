@@ -1,14 +1,17 @@
-Package: myPackageId
-Title: One Line Title in Title Case  
+Package: dplyrUtil
+Title: Utilities for using dplyr 
 Version: 0.0.0.9000
-Date: 2017-09-25
 Author: Thomas Wutzler
 Maintainer: Thomas Wutzler <twutz@bgc-jena.mpg.de>
-Description: Here are some sentences of longer description.
+Description: Mapping functions to groups of tables, harmonizing factors and 
+  other common tasks that commonly occur when using dpylr.
+URL: https://github.com/bgctw/dplyrUtil
 Depends: R (>= 3.2.0)
+Imports: dplyr, rlang, purrr, forcats
 Suggests: testthat, knitr
 License: GPL-3
 LazyLoad: yes
 LazyData: true
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
+Encoding: UTF-8

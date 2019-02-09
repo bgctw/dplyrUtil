@@ -62,24 +62,23 @@ ds
 ```
 
 ```{r}
-fSub <- function(dss,kind){ 
-  dss %>% mutate(dss, countInKind = paste(kind,1:n()) )
-}
-ans <- ds %>% group_by(kind) %>% mapGroups(fSub)
-ans
+fSub <- function(dss){ mutate(dss, countInKind = paste(kind,1:n()) )}
+ds %>% 
+  group_by(kind) %>% 
+  mapGroups(fSub)
 ```
 
-Compare this to the nest-map-unnest idiom:
+Compare this to the usual nest-map-unnest idiom:
 ```{r}
-ans <- ds %>% group_by(kind) %>% nest() %>% 
-  mutate(data = purrr::map2(data, kind, function(dss,kind){
-  dss %>% mutate(
-    countInKind = paste(first(kind),1:n())
-  )
-})) %>% unnest()
-ans
+fSub2 <- function(dss, kind){ mutate(dss, countInKind = paste(kind,1:n()) )}
+ds %>% 
+  group_by(kind) %>% 
+  nest() %>% 
+  mutate(data = purrr::map2(data, kind, fSub2)) %>% 
+  unnest()
 ```
 
-
-
-See the [package vignettes](https://github.com/bgctw/dplyrUtil/tree/master/vignettes) (*.md) for  examples.
+See the 
+[usecase vignette](https://github.com/bgctw/dplyrUtil/blob/master/vignettes/dplyrUtilUsage.md) and other
+[package vignettes](https://github.com/bgctw/dplyrUtil/tree/master/vignettes) 
+(*.md) for  examples.

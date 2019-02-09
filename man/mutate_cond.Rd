@@ -9,7 +9,9 @@
   \item{\dots}{further arguments to \code{\link{mutate}}}
   \item{envir}{the frame where the condition is evaluated}
 }
-\details{is not working on grouped data}
+\details{condition is evaluated in .data inside the parent frame.
+Hence column names can be used. 
+\code{.data} refers to the subset group of the data.frame processed. }
 
 
 \author{Thomas Wutzler}
@@ -19,7 +21,7 @@
 
 \examples{
 if (require(dplyr)) {
-  ans <- iris \%>\% 
+  ans <- iris \%>\%
     mutate_cond(
       Species == "setosa"
       , Petal.Length = 1.0

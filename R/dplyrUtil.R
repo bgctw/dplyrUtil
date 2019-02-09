@@ -49,7 +49,7 @@ map_dfrFactor <- function(
   ### variant of map_dfr that releveles unequal factor levels before binding
   .x                ##<< list to map over
   , .f              ##<< function to apply
-  , ...             ##<< further arguments to \code{\link{purrr::map}}
+  , ...             ##<< further arguments to \code{purrr::map}
   , .id = NULL      ##<< argument to \code{\link{bind_rows}}
   , .isFactorReleveled = TRUE ##<< set to FALSE to avoid releveling
   , .noWarningCols = character(0)  ##<< argument 
@@ -57,8 +57,10 @@ map_dfrFactor <- function(
   
 ) {
   .f <- as_mapper(.f, ...)
-  res <- map(.x, .f, ...) %>% 
-    expandAllInconsistentFactorLevels(.noWarningCols = .noWarningCols) 
+  res <- map(.x, .f, ...) 
+  if (isTRUE(.isFactorReleveled))
+    res <- res %>% expandAllInconsistentFactorLevels(
+      .noWarningCols = .noWarningCols) 
   bind_rows(res, .id = .id)
 }
 
@@ -73,15 +75,22 @@ mutate_cond <- function(
 ) {
   # credits to G. Grothendieck
   # https://stackoverflow.com/questions/34096162/dplyr-mutate-replace-on-a-subset-of-rows 
-  ##details<< is not working on grouped data
-  # TODO
-  condition <- eval(substitute(condition), .data, envir)
-  .data[condition, ] <- .data[condition, ] %>% mutate(...)
-  .data
+  ##details<< condition is evaluated in .data inside the parent frame.
+  ## Hence column names can be used. 
+  ## \code{.data} refers to the subset group of the data.frame processed. 
+  backupData <- envir$.data
+  on.exit(envir$.data <- backupData)
+  condSubst <- substitute(condition) # call to be evaluated in data.frame
+  .data %>% mapGroups(function(dss){
+    envir$.data <- dss
+    isCond <- eval(condSubst, dss, envir)
+    dss[isCond, ] <- dss[isCond, ] %>% mutate(...)
+    dss
+  })
 } 
 attr(mutate_cond,"ex") <- function(){
   if (require(dplyr)) {
-    ans <- iris %>% 
+    ans <- iris %>%
       mutate_cond(
         Species == "setosa"
         , Petal.Length = 1.0
@@ -107,6 +116,7 @@ expandAllInconsistentFactorLevels <- function(
   dots <- list(...)
   datasets <- if (length(dots) == 1) dots[[1]] else dots
   colsToCheck <- intersect(names(datasets[[1]]),names(datasets[[2]]))
+  if (!length(colsToCheck)) return(datasets)
   # col <- colsToCheck[1]
   isInconsistentFactor <- sapply( colsToCheck,  function(col){
     any(map_lgl(

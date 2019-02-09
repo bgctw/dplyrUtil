@@ -1,7 +1,7 @@
 \name{left_joinReplace}
 \alias{left_joinReplace}
 \title{left joinReplace}
-\description{\code{\link{left_join}} but before drop columns that would be duplicated}
+\description{\code{\link{left_join}} with before dropping columns that would be duplicated}
 \usage{left_joinReplace(x, y, by, ...)}
 \arguments{
   \item{x}{data.frames to join}

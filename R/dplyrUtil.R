@@ -73,6 +73,8 @@ mutate_cond <- function(
   , condition     ##<< condition for selecting rows to be modified
   , ...           ##<< further arguments to \code{\link{mutate}}
   , envir = parent.frame()  ##<< the frame where the condition is evaluated
+  , na.rmCond = FALSE ##<< set to TRUE to set NA values in cond to FALSE.
+  ## By default an error is thrown
 ) {
   # credits to G. Grothendieck
   # https://stackoverflow.com/questions/34096162/dplyr-mutate-replace-on-a-subset-of-rows 
@@ -85,6 +87,7 @@ mutate_cond <- function(
   .data %>% mapGroups(function(dss){
     envir$.data <- dss
     isCond <- eval(condSubst, dss, envir)
+    if (isTRUE(na.rmCond)) isCond[is.na(isCond)] <- FALSE
     dss[isCond, ] <- dss[isCond, ] %>% mutate(...)
     dss
   })

@@ -119,7 +119,9 @@ expandAllInconsistentFactorLevels <- function(
 ) {
   dots <- list(...)
   datasets <- if (length(dots) == 1) dots[[1]] else dots
-  colsToCheck <- intersect(names(datasets[[1]]),names(datasets[[2]]))
+  commonCols <- intersect(names(datasets[[1]]),names(datasets[[2]]))
+  colsToCheck <- commonCols[map_lgl(commonCols, function(
+    colToCheck){is.factor(datasets[[1]][[colToCheck]])})]
   if (!length(colsToCheck)) return(datasets)
   # col <- colsToCheck[1]
   isInconsistentFactor <- sapply( colsToCheck,  function(col){

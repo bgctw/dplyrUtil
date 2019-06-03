@@ -1,17 +1,24 @@
 Package: dplyrUtil
-Title: Utilities for using dplyr 
+Title: Utilities for using dplyr
 Version: 0.0.2
 Author: Thomas Wutzler
 Maintainer: Thomas Wutzler <twutz@bgc-jena.mpg.de>
-Description: Mapping functions to groups of tables, harmonizing factors and 
-  other common tasks that commonly occur when using dpylr.
+Description: Mapping functions to groups of tables, harmonizing factors and
+    other common tasks that commonly occur when using dpylr.
 URL: https://github.com/bgctw/dplyrUtil
-Depends: R (>= 3.2.0)
-Imports: dplyr, rlang, purrr, forcats
-Suggests: testthat, knitr
+Depends:
+    R (>= 3.2.0)
+Imports:
+    dplyr,
+    rlang,
+    purrr,
+    forcats
+Suggests:
+    testthat,
+    knitr
 License: GPL-3
 LazyLoad: yes
 LazyData: true
 VignetteBuilder: knitr
-RoxygenNote: 6.1.1
+RoxygenNote: 5.0.1
 Encoding: UTF-8

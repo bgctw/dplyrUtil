@@ -8,7 +8,10 @@
   \item{.noWarningCols}{string vector: do not warn for the these
 columns}
 }
+\details{If no data.frame is provided, its returns an empty list.
 
+Instead of providing several arguments, one can provide a
+a single list of data.frames}
 \value{\code{datasets} with updated factor columns}
 
 \author{Thomas Wutzler}

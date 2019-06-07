@@ -13,7 +13,9 @@
 \details{During joing existing columns are duplicated with a 
 different name.
 This function supports replacing the original columns instead,
-allowing for repeated join of similar data.}
+allowing for repeated join of similar data.
+
+If x is a list of 2 data.frames then these will be assigned to x and y}
 \value{result of \code{\link{left_join}}}
 
 \author{Thomas Wutzler}

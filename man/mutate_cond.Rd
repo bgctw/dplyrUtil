@@ -2,8 +2,7 @@
 \alias{mutate_cond}
 \title{mutate cond}
 \description{mutate acting only on the rows satisfying the condition}
-\usage{mutate_cond(.data, condition, ..., envir = parent.frame(), 
-    na.rmCond = FALSE)}
+\usage{mutate_cond(.data, condition, ..., envir = parent.frame(), na.rmCond = FALSE)}
 \arguments{
   \item{.data}{data.frame to be modified}
   \item{condition}{condition for selecting rows to be modified}

@@ -1,5 +1,5 @@
 #' @importFrom rlang sym syms UQ :=
-NULL
+TRUE
 
 #' @importFrom dplyr left_join select one_of %>%
 #' @export
@@ -13,6 +13,12 @@ left_joinReplace <- function(
   ## different name.
   ## This function supports replacing the original columns instead,
   ## allowing for repeated join of similar data.
+  ##
+  ## If x is a list of 2 data.frames then these will be assigned to x and y
+  if (length(x) == 2 && is.data.frame(x[[1]])){
+    y <- x[[2]]
+    x <- x[[1]]
+  }
   # columns that will be created and need to be dropped from x before
   addCols <- setdiff(names(y),by)  
   delCols <- intersect(names(x), addCols)
@@ -118,7 +124,14 @@ expandAllInconsistentFactorLevels <- function(
   ## columns
 ) {
   dots <- list(...)
-  datasets <- if (length(dots) == 1) dots[[1]] else dots
+  ##details<< If no data.frame is provided, its returns an empty list.
+  if (!length(dots)) return(list())
+  ##details<< Instead of providing several arguments, one can provide a
+  ## a single list of data.frames
+  datasets <- if (length(dots) == 1 && !is.data.frame(dots[[1]])) dots[[1]] else dots
+  # if provided a single data.frame return list with single data.frame
+  if (length(datasets) == 1) return(datasets)
+  if (!length(datasets)) return(list())
   commonCols <- intersect(names(datasets[[1]]),names(datasets[[2]]))
   colsToCheck <- commonCols[map_lgl(commonCols, function(
     colToCheck){is.factor(datasets[[1]][[colToCheck]])})]

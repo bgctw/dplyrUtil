@@ -2,8 +2,7 @@
 \alias{left_joinFactors}
 \title{left joinFactors}
 \description{left join with homogenizing factors before}
-\usage{left_joinFactors(x, y, ..., fJoin = left_join, 
-    .noWarningCols = character(0))}
+\usage{left_joinFactors(x, y, ..., fJoin = left_join, .noWarningCols = character(0))}
 \arguments{
   \item{x}{left tbl to join}
   \item{y}{right tbl to join}

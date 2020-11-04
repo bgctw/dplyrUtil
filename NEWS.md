@@ -3,6 +3,8 @@
 - issues warnings on usage of mapGroups, expandAllInconsistentFactorLevels,
   expandFactorLevels, and left_joinFactors, because recent dplyr can deal
   with those issues
+- avoid rlang import: relace calls to sym and :=
+  
 
 # dplyrUtil 0.0.2
 

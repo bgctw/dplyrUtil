@@ -1,6 +1,3 @@
-#' @importFrom rlang sym syms UQ :=
-TRUE
-
 #' @importFrom dplyr left_join select one_of %>%
 #' @export
 left_joinReplace <- function(
@@ -195,8 +192,8 @@ expandFactorLevels <- function(
   groupLevels <- lvls_union(lapply(datasets, "[[", varName))
   force(varName)
   ans <- map(datasets, function(dss){
-    #mutate(dss, !!varName := fct_expand(!!sym(varName), groupLevels))
-    mutate(dss, !!varName := factor(!!sym(varName), levels = groupLevels))
+    dss[[varName]] <- factor(dss[[varName]], levels = groupLevels)
+    dss
   })
   ##value<< list of datasets with each entries column releveled
   ans

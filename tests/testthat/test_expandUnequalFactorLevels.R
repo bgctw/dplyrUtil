@@ -2,7 +2,6 @@ context("expandAllInconsistentFactorLevels")
 
 .tmp.f <- function(){
   require(dplyr)
-  require(rlang)
   require(testthat)
 }
 

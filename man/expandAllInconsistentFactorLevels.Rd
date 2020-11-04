@@ -2,11 +2,14 @@
 \alias{expandAllInconsistentFactorLevels}
 \title{expandAllInconsistentFactorLevels}
 \description{expand a factor variables in all dataset to encompass levels of all sets}
-\usage{expandAllInconsistentFactorLevels(..., .noWarningCols = character(0))}
+\usage{expandAllInconsistentFactorLevels(..., .noWarningCols = character(0), 
+    .omitWarning = FALSE)}
 \arguments{
   \item{\dots}{list of data.frames or several data.frames separated by comma}
   \item{.noWarningCols}{string vector: do not warn for the these
 columns}
+  \item{.omitWarning}{
+}
 }
 \details{If no data.frame is provided, its returns an empty list.
 

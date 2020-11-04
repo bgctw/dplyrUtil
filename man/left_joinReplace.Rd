@@ -10,7 +10,7 @@
   \item{by}{here must be a character vector}
   \item{\dots}{further arguments to \code{\link{left_join}}}
 }
-\details{During joing existing columns are duplicated with a 
+\details{During joing existing columns are duplicated with a
 different name.
 This function supports replacing the original columns instead,
 allowing for repeated join of similar data.

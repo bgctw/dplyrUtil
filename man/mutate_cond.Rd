@@ -2,7 +2,8 @@
 \alias{mutate_cond}
 \title{mutate cond}
 \description{mutate acting only on the rows satisfying the condition}
-\usage{mutate_cond(.data, condition, ..., envir = parent.frame(), na.rmCond = FALSE)}
+\usage{mutate_cond(.data, condition, ..., envir = parent.frame(), 
+    na.rmCond = FALSE)}
 \arguments{
   \item{.data}{data.frame to be modified}
   \item{condition}{condition for selecting rows to be modified}
@@ -12,8 +13,8 @@
 By default an error is thrown}
 }
 \details{condition is evaluated in .data inside the parent frame.
-Hence column names can be used. 
-\code{.data} refers to the subset group of the data.frame processed. }
+Hence column names can be used.
+\code{.data} refers to the subset group of the data.frame processed.}
 
 
 \author{Thomas Wutzler}

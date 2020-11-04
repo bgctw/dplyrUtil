@@ -1,8 +1,10 @@
-#require(testthat)
 context("mutate_cond")
 
-require(dplyr)
-require(rlang)
+.tmp.f <- function(){
+  library(testthat)
+}
+
+library(dplyr)
 
 test_that("column name as symbol",{
   ans <- iris %>%
@@ -11,7 +13,7 @@ test_that("column name as symbol",{
       , Petal.Length = 1.0
     )
   expect_true(all(filter(ans, Species == "setosa")$Petal.Length == 1))
-  expect_true(all(filter(ans, Species != "setosa")$Petal.Length == 
+  expect_true(all(filter(ans, Species != "setosa")$Petal.Length ==
                     filter(iris, Species != "setosa")$Petal.Length))
 })
 
@@ -22,7 +24,7 @@ test_that("use of .data argument",{
       , Petal.Length = 1.0
     )
   expect_true(all(filter(ans, Species == "setosa")$Petal.Length == 1))
-  expect_true(all(filter(ans, Species != "setosa")$Petal.Length == 
+  expect_true(all(filter(ans, Species != "setosa")$Petal.Length ==
                     filter(iris, Species != "setosa")$Petal.Length))
 })
 
@@ -42,26 +44,27 @@ test_that("NA in condition",{
       .data$Species == "setosa"
       , Petal.Length = 10.0
       , na.rmCond = TRUE
-      
+
     )
   expect_true(all(filter(ans, Species == "setosa")$Petal.Length == 10.0))
-  expect_true(all(filter(ans, Species != "setosa")$Petal.Length == 
+  expect_true(all(filter(ans, Species != "setosa")$Petal.Length ==
                     filter(iris, Species != "setosa")$Petal.Length))
 })
 
-test_that("grouped data",{
+test_that("grouped mutate_cond",{
   # condition depends on the subset of each group
   # Sepal.Length occurs both as symbol and as .data$Sepal.Length
-  ans <- iris %>% group_by(!!sym("Species")) %>% 
+  ans <- iris %>% group_by(.data$Species) %>%
     mutate_cond(
       Sepal.Length >= mean(.data$Sepal.Length)
       , Petal.Length = 10.0 # larger than maximum
     )
-  tmp <- ans %>% group_by(!!sym("Species")) %>% mapGroups(function(dss){
-    expect_true(all(filter(dss, Sepal.Length >= mean(Sepal.Length))$Petal.Length == 10))
-    expect_true(all(filter(dss, Sepal.Length < mean(Sepal.Length))$Petal.Length != 10))
-    data.frame()
-  })
+  tmp <- ans %>% group_by(.data$Species) %>%
+    split(group_indices(.)) %>% map(function(dss){
+      expect_true(all(filter(dss, Sepal.Length >= mean(Sepal.Length))$Petal.Length == 10))
+      expect_true(all(filter(dss, Sepal.Length < mean(Sepal.Length))$Petal.Length != 10))
+      data.frame()
+    })
 })
 
 

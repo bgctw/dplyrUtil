@@ -44,6 +44,8 @@ is agreat way of managing data in R.
 
 Using the package, however, require repeated coding for some common issues.
 This package provides routines for some of those issues.
+We hope that most of the issues are delat with in dplyr directly, and this 
+package to become obsolete then.
 
 ```{r message=FALSE}
 require(dplyr, quietly = TRUE)
@@ -71,7 +73,7 @@ the function working on the subset.
 call interface for the base split function.
 
 The following example applies a function on each kind of food subset
-that uses the number of records in the subset and the grouping variable.
+that uses the number of records in the subset and the grouping variable, `kind`.
 ```{r}
 ds <- tibble(
   food = c("banana","strawberry","pear","bread","corn flakes")
@@ -81,7 +83,10 @@ ans <- ds %>% group_by(kind) %>% mapGroups(function(dss){
   dss %>% mutate(
     countInKind = paste(first(kind),1:n())
   )
-})
+}, .omitWarning = TRUE)
+# or shorter with formula-functions
+ans <- ds %>% group_by(kind) %>% mapGroups(
+  ~mutate(., countInKind = paste(first(kind),1:n())), .omitWarning = TRUE)
 ans
 ```
 
@@ -97,8 +102,30 @@ ans <- ds %>% group_by(kind) %>% mapGroups(function(dss){
   )
 }
 , .isFactorReleveled = TRUE
-, .noWarningCols = c("countInKind"))
+, .noWarningCols = c("countInKind")
+, .omitWarning = TRUE)
 ans
+```
+### Better use split - map_dfr
+However, try learning the split-map idiom to replace calls to mapGroups and
+may spare package dependencies.
+```{r}
+library(purrr)
+ds %>% group_by(kind) %>% split(group_indices(.)) %>% map_dfr(
+  ~mutate(., countInKind = paste(first(kind),1:n())))
+```
+
+In order to users to better use this pattern, `gapGroups` issues a 
+warning. The warning can be avoided by argument `.omitWarning = TRUE`.
+
+Recent versions of map_dfr and bind_rows also work with inconsistent 
+factor levels:
+```{r}
+ansList <- ds %>% group_by(kind) %>% split(group_indices(.)) %>% map(
+  ~mutate(., countInKind = factor(paste(first(kind),1:n())))) 
+ansList[[1]]$countInKind # note that factor levels do not include fruits
+# countInKind is converted to character in older dplyr versions
+ansList %>% bind_rows()  
 ```
 
 mutate acting only on the rows satisfying the condition
@@ -152,6 +179,19 @@ ans1 %>% left_joinReplace(kindInfo, by = "kind") # modified info column
 Dealing with unequal factor levels
 ----------------------------------
 
+Superseded: This functionality has been implemented in recent dpylr versions.
+```{r}
+df1 <- tibble(f = factor(c("D","D","C")))
+df2 <- tibble(f = factor(c("C","C","A"))
+                  , desc = c("forC1","forC2","forA1"))
+bind_rows(df1,df2) # f is converted to character in older dplyr versions
+```
+```{r}
+try({
+  left_join(df1,df2, by = "f") # fails in older dplyr version
+})
+```
+### With older version of dplyr
 In case of unequal factor levels in row-binding tbls or joins,
 factors are converted to character.
 Often one wants to combine the factor levels instead.
@@ -166,8 +206,8 @@ is still a factor but with modified levels.
 df1 <- tibble(f = factor(c("D","D","C")))
 df2 <- tibble(f = factor(c("C","C","A"))
                   , desc = c("forC1","forC2","forA1"))
-bind_rows(df1,df2) # f is converted to character
-expandAllInconsistentFactorLevels(df1,df2) %>% bind_rows()
+bind_rows(df1,df2) # f is converted to character in older dplyr versions
+expandAllInconsistentFactorLevels(df1,df2, .omitWarning = TRUE) %>% bind_rows()
 ```
 
 Function `expandFactorLevels` helps to relevel a specific column 
@@ -181,7 +221,7 @@ single data.frames, i.e. the components of the result (`[[1]]`, `[[2]]`).
 For convenience function `left_joinFactors` helps joining 
 tbls with different factor levels.
 ```{r}
-left_joinFactors(df1,df2, by = "f", .noWarningCols = c("f"))
+left_joinFactors(df1,df2, by = "f", .noWarningCols = c("f"), .omitWarning = TRUE)
 ```
 
 

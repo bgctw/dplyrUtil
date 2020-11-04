@@ -11,16 +11,17 @@ Some longer description.
 
 \details{
 
-Common tasks when using dplyr are 
+Common tasks when using dplyr are
 \itemize{
-\item{ split-map-combine: \code{\link{mapGroups}}  }
-\item{ mutate acting only on the rows satisfying the condition: 
+\item{ split-map-combine: \code{\link{mapGroups}}: shorthand for
+  \code{split(group_indices(.)) \%>\% map_dfr(...)} }
+\item{ mutate acting only on the rows satisfying the condition:
   \code{\link{mutate_cond}}  }
-\item{ left_join with before dropping columns that would be duplicated: 
+\item{ left_join with before dropping columns that would be duplicated:
     \code{\link{left_joinReplace}}  }
 }%itemize
 
-Dealing with unequal factor levels: 
+Dealing with unequal factor levels:
 
 In case of unequal factor levels in row-binding tbls or joins,
 factors are converted to character.

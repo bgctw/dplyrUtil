@@ -9,7 +9,7 @@ left_joinReplace <- function(
   , by  ##<< here must be a character vector
   , ... ##<< further arguments to \code{\link{left_join}}
 ){
-  ##details<< During joing existing columns are duplicated with a 
+  ##details<< During joing existing columns are duplicated with a
   ## different name.
   ## This function supports replacing the original columns instead,
   ## allowing for repeated join of similar data.
@@ -20,7 +20,7 @@ left_joinReplace <- function(
     x <- x[[1]]
   }
   # columns that will be created and need to be dropped from x before
-  addCols <- setdiff(names(y),by)  
+  addCols <- setdiff(names(y),by)
   delCols <- intersect(names(x), addCols)
   xD <- if (length(delCols)) select(x, -one_of(delCols)) else x
   ##value<< result of \code{\link{left_join}}
@@ -33,20 +33,32 @@ left_joinReplace <- function(
 mapGroups <- function(
   ### split-map-combine
   data  ##<< groped data.frame
-  , FUN  ##<< function(data.frmae, ...) -> data.frame to apply to subsets
-  , ...  ##<< further arguments to FUN
-  , drop = TRUE  ##<< logical indicating if levels that do not occur should 
-  ## be dropped. Set to FALSE if FUN returns a data.frame also 
+  , ...  ##<< function or formula passed to \code{\link{map}}
+  ## that receives a data.frame as first argument
+  , drop = TRUE  ##<< logical indicating if levels that do not occur should
+  ## be dropped. Set to FALSE if FUN returns a data.frame also
   ## for zero-row inputs.
   , .isFactorReleveled = FALSE
+  , .omitWarning = FALSE
 ){
-  # https://coolbutuseless.bitbucket.io/2018/03/03/split-apply-combine-my-search-for-a-replacement-for-group_by---do/
+  if( !isTRUE(.omitWarning)) warning(
+    'expecting calls to mapGroups replaced by ',
+    'ds %>% split(group_indices(.)) %>% map_dfr(...). (see ?mapGroups)')
+  ##details<<
+  ## https://stackoverflow.com/questions/53855897/accessing-grouping-variables-in-purrrmap-with-nested-dataframes
+  ## https://coolbutuseless.bitbucket.io/2018/03/03/split-apply-combine-my-search-for-a-replacement-for-group_by---do/
+  ## if you create factors inside map_df, one can use map_dfrFactor.
   groupVars <- group_vars(data)
-  if (!length(groupVars)) return(FUN(data,...))
-  data %>% 
-    split(group_indices(.)) %>% 
-    #split(select(.,groupVars), drop = drop) %>% 
-    map_dfrFactor(FUN,...,.isFactorReleveled = .isFactorReleveled)
+  if (!length(groupVars)) {
+    #ans <- list(data) %>% map(...) %>% "[["(1)
+    ans <- data %>% as_mapper(...)()
+    return(ans)
+  }
+  data %>%
+    split(group_indices(.)) %>%
+    #split(select(.,groupVars), drop = drop) %>%
+    map_dfrFactor(..., .isFactorReleveled = .isFactorReleveled,
+                  .omitWarning = .omitWarning)
 }
 
 #' @importFrom purrr as_mapper map
@@ -55,19 +67,20 @@ mapGroups <- function(
 map_dfrFactor <- function(
   ### variant of map_dfr that releveles unequal factor levels before binding
   .x                ##<< list to map over
-  , .f              ##<< function to apply
   , ...             ##<< further arguments to \code{purrr::map}
   , .id = NULL      ##<< argument to \code{\link{bind_rows}}
   , .isFactorReleveled = TRUE ##<< set to FALSE to avoid releveling
-  , .noWarningCols = character(0)  ##<< argument 
+  , .noWarningCols = character(0)  ##<< argument
   ## to \code{\link{expandAllInconsistentFactorLevels}}
-  
-) {
-  .f <- as_mapper(.f, ...)
-  res <- map(.x, .f, ...) 
+  , .omitWarning = FALSE
+){
+  if( !isTRUE(.omitWarning)) warning(
+    'expected calls to map_dfrFactor to be obsolete ',
+    'with recent versions of bind_rows and joins in dplyr')
+  res <- map(.x, ...)
   if (isTRUE(.isFactorReleveled))
     res <- res %>% expandAllInconsistentFactorLevels(
-      .noWarningCols = .noWarningCols) 
+      .noWarningCols = .noWarningCols, .omitWarning = TRUE)
   bind_rows(res, .id = .id)
 }
 
@@ -83,21 +96,22 @@ mutate_cond <- function(
   ## By default an error is thrown
 ) {
   # credits to G. Grothendieck
-  # https://stackoverflow.com/questions/34096162/dplyr-mutate-replace-on-a-subset-of-rows 
+  # https://stackoverflow.com/questions/34096162/dplyr-mutate-replace-on-a-subset-of-rows
   ##details<< condition is evaluated in .data inside the parent frame.
-  ## Hence column names can be used. 
-  ## \code{.data} refers to the subset group of the data.frame processed. 
+  ## Hence column names can be used.
+  ## \code{.data} refers to the subset group of the data.frame processed.
   backupData <- envir$.data
   on.exit(envir$.data <- backupData)
   condSubst <- substitute(condition) # call to be evaluated in data.frame
-  .data %>% mapGroups(function(dss){
+  #.data %>% mapGroups(function(dss){
+  .data %>% split(group_indices(.)) %>% map_dfr(function(dss){
     envir$.data <- dss
     isCond <- eval(condSubst, dss, envir)
     if (isTRUE(na.rmCond)) isCond[is.na(isCond)] <- FALSE
     dss[isCond, ] <- dss[isCond, ] %>% mutate(...)
     dss
   })
-} 
+}
 attr(mutate_cond,"ex") <- function(){
   if (require(dplyr)) {
     ans <- iris %>%
@@ -114,7 +128,7 @@ attr(mutate_cond,"ex") <- function(){
 # exported from equidIO
 
 #' @importFrom purrr map map_dbl map_lgl map_dfr
-#' @importFrom dplyr mutate 
+#' @importFrom dplyr mutate
 #' @importFrom forcats lvls_union
 #' @export
 expandAllInconsistentFactorLevels <- function(
@@ -122,7 +136,11 @@ expandAllInconsistentFactorLevels <- function(
   ...  ##<< list of data.frames or several data.frames separated by comma
   , .noWarningCols = character(0)  ##<< string vector: do not warn for the these
   ## columns
-) {
+  , .omitWarning = FALSE
+){
+  if( !isTRUE(.omitWarning)) warning(
+    'expected calls to expandAllInconsistentFactorLevels to be obsolete ',
+    'with recent versions of bind_rows and joins in dplyr')
   dots <- list(...)
   ##details<< If no data.frame is provided, its returns an empty list.
   if (!length(dots)) return(list())
@@ -146,8 +164,9 @@ expandAllInconsistentFactorLevels <- function(
   colNamesInc <- colsToCheck[isInconsistentFactor]
   colNamesWarn <- setdiff(colNamesInc, .noWarningCols)
   if (length(colNamesWarn)) warning(
-    "releveling factors ", paste(colNamesWarn , collapse = ","))    
-  for (col in colNamesInc) datasets <- expandFactorLevels(datasets, col)
+    "releveling factors ", paste(colNamesWarn , collapse = ","))
+  for (col in colNamesInc) datasets <- expandFactorLevels(
+    datasets, col, .omitWarning = TRUE)
   ##value<< \code{datasets} with updated factor columns
   datasets
 }
@@ -167,7 +186,11 @@ expandFactorLevels <- function(
   ### expand a factor in all dataset to encompass levels of all sets
   datasets    ##<< list of data.frames
   , varName   ##<< scalar string of variable holding the factor
-) {
+  , .omitWarning = FALSE
+){
+  if( !isTRUE(.omitWarning)) warning(
+    'expected calls to expandFactorLevels to be obsolete ',
+    'with recent versions of bind_rows and joins in dplyr')
   #https://stackoverflow.com/questions/46876312/how-to-merge-factors-when-binding-two-dataframes-together/50503461#50503461
   groupLevels <- lvls_union(lapply(datasets, "[[", varName))
   force(varName)
@@ -188,9 +211,13 @@ left_joinFactors <- function(
   , fJoin = left_join  ##<< join function(x,y,...) to use
   , .noWarningCols = character(0)  ##<< string vector: do not warn for the these
   ## columns
+  , .omitWarning = FALSE
 ){
+  if( !isTRUE(.omitWarning)) warning(
+    'expected calls to left_joinFactors to be obsolete ',
+    'with recent versions of bind_rows and joins in dplyr')
   dfs <- expandAllInconsistentFactorLevels(
-    x,y, .noWarningCols = .noWarningCols)
+    x,y, .noWarningCols = .noWarningCols, .omitWarning = TRUE)
   ##value<< results of \code{\link{left_join}} or given alternative join function
   fJoin(dfs[[1]], dfs[[2]], ...)
 }

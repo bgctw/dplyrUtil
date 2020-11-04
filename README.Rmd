@@ -17,6 +17,11 @@ Common tasks when using dplyr are
 -   mutate acting only on the rows satisfying the condition
 -   left\_join with before dropping columns that would be duplicated
 
+Dealing with unequal factor levels in row-binding or joins
+
+- expand factor levels in all datasets
+- join with homogenizing factors before
+
 Installation
 ------------
 
